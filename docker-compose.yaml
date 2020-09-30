@@ -1,0 +1,63 @@
+version: '3'
+services:
+#    postgres:
+#        image: postgres
+#        ports:
+#            - '5433:5432'
+    php:
+        build: /home/mbdev/webapps/docker/php-fpm
+        ports:
+            - '9002:9000'
+        volumes:
+            - "../${PROJECT_NAME}:/var/www/symfony:cached"
+            - "../data/logs/${PROJECT_NAME}:/var/www/symfony/var/logs:cached"
+            - ~/.ssh:/home/user/.ssh
+        links:
+            - mysql
+    nginx:
+        build: /home/mbdev/webapps/docker/nginx
+        ports:
+            - "${PORT}:80"
+        links:
+            - php
+            - redis
+        volumes_from:
+            - php
+        volumes:
+            - "../data/logs/${PROJECT_NAME}/nginx/:/var/log/nginx:cached"
+            - "/home/mbdev/webapps/docker/nginx/sites-available:/etc/nginx/sites-available"
+            - "/home/mbdev/webapps/docker/nginx/sites-available:/etc/nginx/sites-enabled"
+
+    mysql:
+        image: mysql:5.7
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            MYSQL_USER: 'root'
+        volumes:
+            - ../data/mysql:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - "8080:80"
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+
+#    nodejs:
+#        build: nodejs
+#        volumes_from:
+#            - php
+#        command: "yarn build"
+#        ports:
+#            - 8089:8089 # Port pour webpack
+#            - 3000:3000 # Port pour BrowserSync
+#        command: bash -c "yarn && yarn dev"
+
+    redis:
+        image: redis:alpine
+        ports:
+            - 6379:6379
