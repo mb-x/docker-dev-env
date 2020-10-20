@@ -1,0 +1,40 @@
+version: '3'
+services:
+    mysql:
+        image: mysql:5.7
+        container_name: mysql
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            MYSQL_USER: 'root'
+        volumes:
+            - ../data/mysql:/var/lib/mysql
+#        networks:
+#            - mm-network
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        ports:
+            - "8090:80"
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+#        networks:
+#            - mm-network
+
+    redis:
+        image: redis:alpine
+        container_name: redis
+        ports:
+            - 6379:6379
+#        networks:
+#            - mm-network
+
+
+#networks:
+#    mm-network:
+#        driver: bridge
+              

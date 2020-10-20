@@ -1,4 +1,5 @@
-export PROJECT_NAME=connective
-export PORT=80
+export PROJECT_NAME=contratapi
+export PORT=90
 
-docker-compose --project-directory ../$PROJECT_NAME/ $1
+
+docker-compose --project-directory ../$2/ $1

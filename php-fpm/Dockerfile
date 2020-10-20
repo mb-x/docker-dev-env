@@ -70,4 +70,4 @@ RUN addgroup --gid 1000 user
 RUN adduser --disabled-password --gecos '' --uid 1000 --gid 1000 user
 USER user
 
-WORKDIR /var/www/symfonyl
+WORKDIR /var/www/symfony

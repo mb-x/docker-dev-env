@@ -1,0 +1,37 @@
+version: "3"
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: 'root'
+    volumes:
+      - /home/mbdev/webapps/data/mysql:/var/lib/mysql
+
+  php:
+    build: /home/mbdev/webapps/docker/php-fpm
+    ports:
+      - '9002:9000'
+    volumes:
+      - "/home/mbdev/webapps/connective:/var/www/symfony:cached"
+      - "/home/mbdev/webapps/data/logs/connective:/var/www/symfony/var/logs:cached"
+      - ~/.ssh:/home/user/.ssh
+    links:
+      - mysql
+    environment:
+      VIRTUAL_HOST: connective.local
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+
