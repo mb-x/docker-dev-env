@@ -10,8 +10,6 @@ services:
             MYSQL_USER: 'root'
         volumes:
             - ../data/mysql:/var/lib/mysql
-#        networks:
-#            - mm-network
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -22,19 +20,11 @@ services:
             - mysql
         environment:
             PMA_HOST: mysql
-#        networks:
-#            - mm-network
 
     redis:
         image: redis:alpine
         container_name: redis
         ports:
             - 6379:6379
-#        networks:
-#            - mm-network
 
-
-#networks:
-#    mm-network:
-#        driver: bridge
               
